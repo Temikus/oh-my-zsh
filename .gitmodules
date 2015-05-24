@@ -1,0 +1,3 @@
+[submodule "plugins/mac-packaging"]
+	path = plugins/mac-packaging
+	url = https://github.com/Temikus/mac-packaging
