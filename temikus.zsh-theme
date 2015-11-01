@@ -5,9 +5,8 @@ if [[ -z "$SSH_CLIENT" ]]; then
      prompt_host=%{$fg_bold[white]%}@%{$reset_color$fg[yellow]%}$(hostname -s)
 fi
 
-_rbenv_prompt()
+rbenv_prompt()
 {
-  type rbenv >/dev/null 2>&1 || return 0
   rbenv_version=$(rbenv version-name)
   if [[ $rbenv_version == 'system' ]]; then
     return 0
@@ -16,7 +15,17 @@ _rbenv_prompt()
   fi
 }
 
-PROMPT=$'$(_rbenv_prompt)%{$fg_bold[cyan]%}%~ %{$reset_color%}$(git_prompt_info)%{$fg[cyan]%}%D{[%H:%M:%S]}$(battery_pct_prompt)\
+git_prompt_email()
+{
+  git_email=$(git config --get user.email)
+  if [ -z "$git_email" -o -z $(git_prompt_info) ]; then
+    return 0
+  else
+    echo "-$git_email "
+  fi
+}
+
+PROMPT=$'$(rbenv_prompt)%{$fg_bold[cyan]%}%~ %{$reset_color%}$(git_prompt_info)$(git_prompt_email)%{$fg[cyan]%}%D{[%H:%M:%S]}$(battery_pct_prompt)\
 %{$fg_bold[green]%}%n${prompt_host}%{$fg_bold[white]%} \x\xCE\xbb%{$reset_color%} '
 
 RPROMPT='%(0?..(%?%))'
